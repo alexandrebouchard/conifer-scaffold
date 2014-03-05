@@ -356,7 +356,17 @@ EJML.
 #### Computing the likelihood on a tree
 
 
+Next, we will use the matrix exponential and a discrete factor graph 
+to compute the likelihood of the data under a certain tree.
 
+First, derive the form of the factor graph that is needed to do this calculation.
+See lecture 10 for a refresher on the model.
+
+Look at the documentation in DiscreteFactorGraph for help on how to 
+create the factor graph.
+
+Look also at EdgeSorter to orient the edges of the tree (recall that you 
+can root the tree arbitrarily).
 
 <sub>From:[conifer.factors.TreeLikelihood](src/main/java//conifer/factors/TreeLikelihood.java)</sub>
 

@@ -32,29 +32,84 @@ import briefj.BriefCollections;
 import briefj.BriefIO;
 
 
-
+/**
+ * A factor to compute the likelihood of observed sequence data 
+ * viewed as the leaves of a CTMC along a tree shaped branching 
+ * process.
+ * 
+ * @author Alexandre Bouchard (alexandre.bouchard@gmail.com)
+ *
+ * @param <R> The type of rate matrix used.
+ */
 public class TreeLikelihood<R extends RateMatrix> implements Factor
 {
+  /**
+   * 
+   */
   @FactorArgument
   public final UnrootedTree tree;
   
+  /**
+   * 
+   */
   @FactorComponent
   public final R rateMatrix;
   
   private final Map<TreeNode, UnaryFactor<TreeNode>> observationFactors;
+  
+  /**
+   * The number of sites (columns in the sequence alignment). Each is
+   * considered to be independent but evolving along a shared tree.
+   */
   private final int nSites;
-  
-  
-  
-  private TreeLikelihood(UnrootedTree tree, R rateMatrix,
-      Map<TreeNode, UnaryFactor<TreeNode>> observationFactors, int nSites)
-  {
-    this.tree = tree;
-    this.rateMatrix = rateMatrix;
-    this.observationFactors = observationFactors;
-    this.nSites = nSites;
-  }
 
+  /**
+   * Builds a factor graph, and use the elimination algorithm covered in
+   * class to compute the likelihood of the observed sequences given the
+   *  tree and the rate matrix.
+   */
+  @Override
+  public double logDensity()
+  {
+    SumProduct<TreeNode> sumProduct = new SumProduct<TreeNode>(buildFactorGraph());
+    return sumProduct.logNormalization();
+  }
+  
+  /**
+   * Next, we will use the matrix exponential and a discrete factor graph 
+   * to compute the likelihood of the data under a certain tree.
+   * 
+   * First, derive the form of the factor graph that is needed to do this calculation.
+   * See lecture 10 for a refresher on the model.
+   * 
+   * Look at the documentation in DiscreteFactorGraph for help on how to 
+   * create the factor graph.
+   * 
+   * Look also at EdgeSorter to orient the edges of the tree (recall that you 
+   * can root the tree arbitrarily).
+   */
+  @Tutorial(showSource = false, showLink = true)
+  public DiscreteFactorGraph<TreeNode> buildFactorGraph()
+  {
+    throw new RuntimeException(); 
+  }
+  
+   
+  
+  /**
+   * Creates a tree likelihood factor from the sequences in the provided file.
+   * 
+   * The format of the file is: 
+   *  - one line per taxon (species/leaf in the tree)
+   *  - each line should begin with the name of the taxon, a space, and then the DNA sequence
+   *  
+   * See for example the file primates.data in this repository for an example.
+   * 
+   * The default rate matrix used is the Juke Cantor matrix, giving the same rate
+   * to all transitions. 
+   * 
+   * @param inputFile The file containing the sequence data.
+   */
   public static TreeLikelihood<JukeCantorRateMatrix> fromObservations(File inputFile)
   {
     // TODO: make this detect the type of observation
@@ -82,24 +137,13 @@ public class TreeLikelihood<R extends RateMatrix> implements Factor
     UnrootedTree randomTree = NonClockTreePrior.generate(rand, Exponential.on(RealVariable.real()), leaves);
     return new TreeLikelihood<JukeCantorRateMatrix>(randomTree, new JukeCantorRateMatrix(factory.nSymbols()), leafLikelihoods, nSites);
   }
-
-  @Override
-  public double logDensity()
+  
+  private TreeLikelihood(UnrootedTree tree, R rateMatrix,
+      Map<TreeNode, UnaryFactor<TreeNode>> observationFactors, int nSites)
   {
-    SumProduct<TreeNode> sumProduct = new SumProduct<TreeNode>(buildFactorGraph());
-    return sumProduct.logNormalization();
+    this.tree = tree;
+    this.rateMatrix = rateMatrix;
+    this.observationFactors = observationFactors;
+    this.nSites = nSites;
   }
-  
-//  TODO:
-  
-  /**
-   * 
-   */
-  @Tutorial(showSource = false, showLink = true)
-  public DiscreteFactorGraph<TreeNode> buildFactorGraph()
-  {
-    throw new RuntimeException(); 
-  }
-  
-   
 }
