@@ -370,3 +370,39 @@ can root the tree arbitrarily).
 
 <sub>From:[conifer.factors.TreeLikelihood](src/main/java//conifer/factors/TreeLikelihood.java)</sub>
 
+#### Sampling the tree
+
+We now have a working likelihood factor, but note the tree random variable it is connected
+to is not of type supported by default in Blang. This brings us to the next topic, how to 
+create samplers for new datatypes. Notice that at the top of the class declaration of UnrootedTree,
+there is an annotation ``@Samplers({SingleNNI.class, SingleBranchScaling.class})``, which 
+specifies which samplers to use for this type of object. 
+
+Let us look at one of them, SingleNNI.
+
+
+This is the core of the tree sampling procedure, and also illustrate the simplest way
+of creating new samplers in Blang:
+- create a class that implements HMProposalDistribution
+- add a field annotated with ``@SampledVariable`` which will be automatically populated with the variable to resample.
+- add a list of factor fields annotated with ``@ConnectedFactor``
+- implement the ``propose()`` method to modify the variable in place.
+
+Your exercise here is to prove that the combination of SingleBranchNNI's and SingleBranchScaling's make
+the sampler irreducible.
+
+```java
+List<UnorderedPair<TreeNode, TreeNode>> nonTerminalEdges = TopologyUtils.nonTerminalEdges(tree.getTopology());
+UnorderedPair<TreeNode, TreeNode> referenceEdge = DiscreteUniform.sample(nonTerminalEdges, rand);
+TreeNode moved1 = sampleMovedEndpoint(referenceEdge, referenceEdge.getFirst(), rand);
+TreeNode moved2 = sampleMovedEndpoint(referenceEdge, referenceEdge.getSecond(), rand);
+tree.interchange(moved1, referenceEdge.getFirst(), moved2, referenceEdge.getSecond());
+return new ProposalRealization(moved2, referenceEdge.getFirst(), moved1, referenceEdge.getSecond());
+```
+<sub>From:[conifer.moves.SingleNNI](src/main/java//conifer/moves/SingleNNI.java)</sub>
+
+#### Running the phylogenetic sampler
+
+Finally, you can run the phylogenetic sampler. More detail will be added shortly.
+
+

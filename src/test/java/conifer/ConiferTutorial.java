@@ -4,12 +4,15 @@ import java.util.Random;
 
 import conifer.ctmc.CTMC;
 import conifer.factors.TreeLikelihood;
+import conifer.moves.SingleBranchScaling;
+import conifer.moves.SingleNNI;
 
 import bayonet.distributions.Exponential;
 import bayonet.distributions.Uniform;
 import bayonet.distributions.Exponential.MeanParameterization;
 import bayonet.distributions.Uniform.MinMaxParameterization;
 import blang.annotations.DefineFactor;
+import blang.annotations.Samplers;
 import tutorialj.Tutorial;
 
 
@@ -208,4 +211,26 @@ public class ConiferTutorial
    */
   @Tutorial(showSource = false, nextStep = TreeLikelihood.class)
   public void phyloApplicationPart2() {}
+  
+  /**
+   * #### Sampling the tree
+   * 
+   * We now have a working likelihood factor, but note the tree random variable it is connected
+   * to is not of type supported by default in Blang. This brings us to the next topic, how to 
+   * create samplers for new datatypes. Notice that at the top of the class declaration of UnrootedTree,
+   * there is an annotation ``@Samplers({SingleNNI.class, SingleBranchScaling.class})``, which 
+   * specifies which samplers to use for this type of object. 
+   * 
+   * Let us look at one of them, SingleNNI.
+   */
+  @Tutorial(showSource = false, nextStep = SingleNNI.class)
+  public void phyloApplicationPart3() {}
+  
+  /**
+   * #### Running the phylogenetic sampler
+   * 
+   * Finally, you can run the phylogenetic sampler. More detail will be added shortly.
+   */
+  @Tutorial(showSource = false, nextStep = SimplePhyloModel.class)
+  public void runningPhylo() {}
 }
