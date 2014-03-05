@@ -1,0 +1,9 @@
+.settings
+.gradle
+.classpath
+.project
+bin
+bin/conifer
+bin/conifer/Main.class
+results
+build
