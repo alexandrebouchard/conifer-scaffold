@@ -241,6 +241,7 @@ Exponential exponential = Exponential.on(gamma.parameters.rate);
 ```
 
 To do this, proceed as follows:
+
 1. Declare a generic type in the class declaration: ``public class Gamma<P extends Parameters>``. Here P is what is 
    called a *generic*. It is like a variable, but instead of holding a value, it holds a type (class or interface name).
    The part ``extends Parameters`` is called a type bound: it means that P is has to implement Parameters.
@@ -403,6 +404,45 @@ return new ProposalRealization(moved2, referenceEdge.getFirst(), moved1, referen
 
 #### Running the phylogenetic sampler
 
-Finally, you can run the phylogenetic sampler. More detail will be added shortly.
+Finally, you can now run the phylogenetic sampler. 
+
+
+Modify the ``process()`` function below to save the output trees to a file.
+Use ``UnrootedTreeUtils.toNewick()`` to save the files in the 
+[newick format](http://en.wikipedia.org/wiki/Newick_format), a standard 
+way of saving tree.
+
+```java
+protected void process(blang.processing.ProcessorContext)
+{
+    samples.add(treePrior.branchDistribution.parameters.rate.getValue());
+}
+```
+<sub>From:[conifer.SimplePhyloModel](src/main/java//conifer/SimplePhyloModel.java)</sub>
+
+You can look at these trees using for example [FigTree](http://tree.bio.ed.ac.uk/software/figtree/)
+
+#### Optional: summarizing the trees
+
+**Warning:** For this part, you may need to update your git repository to the latest
+version of the scaffold code. (code updated on March 10)
+
+Finally, summarize all these trees using a consensus tree. Recall that 
+we discuss in class that the consensus tree corresponds to a Bayes estimator,
+see [http://sysbio.oxfordjournals.org/content/57/5/814.full](http://sysbio.oxfordjournals.org/content/57/5/814.full)
+for the details.
+
+You can use existing implementations of consensus tree software, for example 
+[hashcs](https://code.google.com/p/hashcs/):
+
+1. Download the software at [https://code.google.com/p/hashcs/downloads/list](https://code.google.com/p/hashcs/downloads/list)
+2. Unzip, configure using ``./configure`` from the unzipped directory
+3. ``make``
+4. You can now compute consensus using ``./hashcs path/to/treefile 0``, where path/to/treefile
+   should be replaced by the path to the file containing the newick files, one per line.
+   
+Use a strict consensus. See the [documentation](https://code.google.com/p/hashcs/downloads/detail?name=hashcs-howto.pdf&can=2&q=) for more info.
+
+Include a visualization of the consensus tree in your report.
 
 

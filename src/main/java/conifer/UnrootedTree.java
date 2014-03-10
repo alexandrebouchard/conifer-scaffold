@@ -6,12 +6,12 @@ import org.jgrapht.UndirectedGraph;
 
 import bayonet.graphs.GraphUtils;
 import blang.annotations.Samplers;
+import briefj.collections.UnorderedPair;
 
 import com.google.common.collect.Maps;
 
 import conifer.moves.SingleBranchScaling;
 import conifer.moves.SingleNNI;
-import fig.basic.UnorderedPair;
 
 
 /**

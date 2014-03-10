@@ -12,13 +12,13 @@ import blang.factors.Factor;
 import blang.mcmc.ConnectedFactor;
 import blang.mcmc.MHProposalDistribution;
 import blang.mcmc.SampledVariable;
+import briefj.collections.UnorderedPair;
 
 import com.google.common.collect.Lists;
 
 import conifer.TopologyUtils;
 import conifer.TreeNode;
 import conifer.UnrootedTree;
-import fig.basic.UnorderedPair;
 
 
 
