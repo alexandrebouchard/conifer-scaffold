@@ -344,6 +344,8 @@ Fill in ``marginalTransitionProbability()``.
 Use the diagonalization method covered in class, using 
 the eigen-decomposition functionalities provided by EJML.
 
+See EJMLUtils.java in the bayonet project (v. 2.0.3).
+
 <sub>From:[conifer.ctmc.CTMC](src/main/java//conifer/ctmc/CTMC.java)</sub>
 
 Fill in ``stationaryDistribution()``.
