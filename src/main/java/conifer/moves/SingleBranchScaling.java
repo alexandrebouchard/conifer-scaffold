@@ -3,9 +3,6 @@ package conifer.moves;
 import java.util.List;
 import java.util.Random;
 
-import org.jgrapht.Graphs;
-
-
 import com.google.common.collect.Lists;
 
 import conifer.TreeNode;
@@ -26,7 +23,7 @@ public class SingleBranchScaling implements MHProposalDistribution
   
   @ConnectedFactor List<Factor> factors;
   
-  private static final double maxMultiplier = 2.0;
+  private static final double lambda = 2.0 * Math.log(2.0);
 
   @Override
   public Proposal propose(Random rand)
@@ -34,7 +31,8 @@ public class SingleBranchScaling implements MHProposalDistribution
     List<UnorderedPair<TreeNode, TreeNode>> allEdges = Lists.newArrayList(tree.getTopology().edgeSet());
     final UnorderedPair<TreeNode, TreeNode> edge = DiscreteUniform.sample(allEdges, rand);
     final double oldValue = tree.getBranchLengths().get(edge);
-    final double m = nextDouble(rand, 1.0/maxMultiplier, maxMultiplier);
+    double u = rand.nextDouble();
+    final double m = Math.exp(lambda * (u - 0.5));
     final double newValue = m * oldValue;
     tree.updateBranchLength(edge, newValue);
     return new Proposal() {
@@ -54,11 +52,6 @@ public class SingleBranchScaling implements MHProposalDistribution
     };
   }
   
-
-  
-  // TODO: need to merge bayonet.distribution, bayonet.mcmc.dist, fig stuff, etc
-  // at same time, check all for correctness
-  // TODO: add an argument to say the logDensity is normalized with respect to subset of variables
   public static double nextDouble(Random rand, double left, double right)
   {
     return left + (right-left) * rand.nextDouble();
